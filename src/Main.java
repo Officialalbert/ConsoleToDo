@@ -1,12 +1,15 @@
 import Dao.DaoClass;
+import Validation.ValidationClass;
+import Validation.ValidationResult;
 
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        DaoClass dao = new DaoClass();
-        Scanner choice = new Scanner(System.in);
-        int option;
+        DaoClass dao = DaoClass.getInstance();
+        Scanner scanner = new Scanner(System.in);
+        int option = -1;
+        ValidationClass validator = new ValidationClass();
 
         do {
             System.out.println("\n=== МЕНЮ ===");
@@ -17,18 +20,26 @@ public class Main {
             System.out.println("0 - Выход");
             System.out.print("Выберите: ");
 
-            option = choice.nextInt();  // Читаем внутри цикла
-            choice.nextLine();
-            switch (option) {
-                case 1: dao.save(choice); break;
-                case 2: dao.update(choice); break;
-                case 3: dao.delete(choice); break;
-                case 4: dao.watch(); break;
-                case 0: System.out.println("Выход"); break;
-                default: System.out.println("0-4!");
+            String input = scanner.nextLine();
+            input = input.trim();
+            ValidationResult result = validator.validate(input);
+            if (!result.isValid()) {
+                result.getErrors().forEach(System.out::println);
+                continue;
             }
-        } while (option != 0);  // Цикл до 0
 
-        choice.close();
+            option = Integer.parseInt(input);
+
+            switch (option) {
+                case 1 -> dao.save(scanner);
+                case 2 -> dao.update(scanner);
+                case 3 -> dao.delete(scanner);
+                case 4 -> dao.watch();
+                case 0 -> System.out.println("Выход");
+            }
+
+        } while (option != 0);
+
+        scanner.close();
     }
 }

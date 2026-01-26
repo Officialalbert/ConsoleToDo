@@ -8,6 +8,16 @@ public class DaoClass {
     private final ConcurrentHashMap<Integer, String> hashMapen = new ConcurrentHashMap<>();
     private final AtomicInteger idGen = new AtomicInteger(0);
 
+        private static DaoClass INSTANCE;
+        private DaoClass() {}
+
+        public static DaoClass getInstance() {
+            if (INSTANCE == null) {
+                INSTANCE = new DaoClass();
+            }
+            return INSTANCE;
+        }
+
     // В DAOClass
     public void update(Scanner scanner) {
         System.out.println("Введите ID для обновления (или -1 для отмены):");
@@ -30,7 +40,7 @@ public class DaoClass {
         String newValue = scanner.nextLine();
 
         if (hashMapen.replace(id, newValue) != null) {
-            System.out.println("✅ Обновлено!");
+            System.out.println("Обновлено!");
         }
     }
 
@@ -42,7 +52,7 @@ public class DaoClass {
         if (id == -1) return;
 
         String removed = hashMapen.remove(id);
-        System.out.println(removed != null ? "✅ Удалено ID " + id : "❌ ID не найден");
+        System.out.println(removed != null ? "Удалено ID " + id : "ID не найден");
     }
 
     public void save(Scanner scanner) {
@@ -50,7 +60,7 @@ public class DaoClass {
         int id = idGen.getAndIncrement();
         String value = scanner.nextLine();
         hashMapen.put(id, value);
-        System.out.println("✅ Сохранено ID " + id);
+        System.out.println("Сохранено ID " + id);
     }
 
     public void watch() {
