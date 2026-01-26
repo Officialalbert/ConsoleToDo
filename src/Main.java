@@ -1,26 +1,34 @@
-import java.util.Scanner;
 import Dao.DaoClass;
+
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world");
-        System.out.println("что вы хотите сделать?");
+        DaoClass dao = new DaoClass();
         Scanner choice = new Scanner(System.in);
-        switch (choice.nextInt()){
-            case 1 :
-                save();
-                break;
-            case 2:
-                System.out.println("изменить даныне");
-                break;
-            case 3:
-                System.out.println("Удалить данные");
-                break;
-            case 4:
-                System.out.println("Просмотреть данные");
-                break;
-            default:
-                System.out.println("введите от 1 до 4 число которое нужно вам");
-        }
+        int option;
+
+        do {
+            System.out.println("\n=== МЕНЮ ===");
+            System.out.println("1 - Сохранить");
+            System.out.println("2 - Изменить данные");
+            System.out.println("3 - Удалить данные");
+            System.out.println("4 - Просмотр всех");
+            System.out.println("0 - Выход");
+            System.out.print("Выберите: ");
+
+            option = choice.nextInt();  // Читаем внутри цикла
+            choice.nextLine();
+            switch (option) {
+                case 1: dao.save(choice); break;
+                case 2: dao.update(choice); break;
+                case 3: dao.delete(choice); break;
+                case 4: dao.watch(); break;
+                case 0: System.out.println("Выход"); break;
+                default: System.out.println("0-4!");
+            }
+        } while (option != 0);  // Цикл до 0
+
+        choice.close();
     }
 }
