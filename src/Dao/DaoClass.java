@@ -1,5 +1,9 @@
 package Dao;
 
+import Errors.WrongException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -7,16 +11,19 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class DaoClass {
     private final ConcurrentHashMap<Integer, String> hashMapen = new ConcurrentHashMap<>();
     private final AtomicInteger idGen = new AtomicInteger(0);
+    private static final Logger logger = LoggerFactory.getLogger(DaoClass.class);
 
-        private static DaoClass INSTANCE;
-        private DaoClass() {}
+    private static DaoClass INSTANCE;
 
-        public static DaoClass getInstance() {
-            if (INSTANCE == null) {
-                INSTANCE = new DaoClass();
-            }
-            return INSTANCE;
+    private DaoClass() {
+    }
+
+    public static DaoClass getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new DaoClass();
         }
+        return INSTANCE;
+    }
 
     // В DAOClass
     public void update(Scanner scanner) {
@@ -41,6 +48,7 @@ public class DaoClass {
 
         if (hashMapen.replace(id, newValue) != null) {
             System.out.println("Обновлено!");
+            logger.info("Информация обновлена!");
         }
     }
 
@@ -53,6 +61,7 @@ public class DaoClass {
 
         String removed = hashMapen.remove(id);
         System.out.println(removed != null ? "Удалено ID " + id : "ID не найден");
+        logger.info("Id удален или ненайден");
     }
 
     public void save(Scanner scanner) {
@@ -61,6 +70,7 @@ public class DaoClass {
         String value = scanner.nextLine();
         hashMapen.put(id, value);
         System.out.println("Сохранено ID " + id);
+        logger.info("Сохранен новый Id");
     }
 
     public void watch() {
@@ -74,5 +84,6 @@ public class DaoClass {
         );
     }
 
+    public void exception() { int a = 3; if (a == 3) { try { throw new WrongException("Exception"); } catch (WrongException e) { e.printStackTrace(); } } }
 
 }

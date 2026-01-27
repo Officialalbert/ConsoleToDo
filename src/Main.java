@@ -1,11 +1,12 @@
 import Dao.DaoClass;
+import Errors.WrongException;
 import Validation.ValidationClass;
 import Validation.ValidationResult;
 
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws WrongException {
         DaoClass dao = DaoClass.getInstance();
         Scanner scanner = new Scanner(System.in);
         int option = -1;
@@ -17,6 +18,7 @@ public class Main {
             System.out.println("2 - Изменить данные");
             System.out.println("3 - Удалить данные");
             System.out.println("4 - Просмотр всех");
+            System.out.println("5 - для ошибки");
             System.out.println("0 - Выход");
             System.out.print("Выберите: ");
 
@@ -35,6 +37,8 @@ public class Main {
                 case 2 -> dao.update(scanner);
                 case 3 -> dao.delete(scanner);
                 case 4 -> dao.watch();
+                case 5 -> dao.exception();
+
                 case 0 -> System.out.println("Выход");
             }
 
