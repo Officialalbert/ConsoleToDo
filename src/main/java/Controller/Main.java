@@ -20,7 +20,8 @@ public class Main {
             System.out.println("2 - Изменить данные");
             System.out.println("3 - Удалить данные");
             System.out.println("4 - Просмотр всех");
-            System.out.println("5 - для ошибки");
+            System.out.println("5 - Поиск одного по id");
+            System.out.println("6 - для ошибки");
             System.out.println("0 - Выход");
             System.out.print("Выберите: ");
 
@@ -35,11 +36,35 @@ public class Main {
             option = Integer.parseInt(input);
 
             switch (option) {
-                case 1 -> dao.save(scanner);
-                case 2 -> dao.update(scanner);
-                case 3 -> dao.delete(scanner);
-                case 4 -> dao.watch();
+                case 1 -> {
+                    System.out.print("Что сохранить: ");
+                    String value = scanner.nextLine();
+                    dao.save(value);
+                }
+                case 2 -> {
+                    System.out.println("Введите ID для обновления (или -1 для отмены):");
+                    int id = scanner.nextInt();
+                    scanner.nextLine();
+                    String newStr = scanner.nextLine();
+                    if (id == -1) return;
+                    dao.update(newStr,id);
+                }
+                case 3 -> {
+                    System.out.println("Введите ID для удаления (или -1 для отмены):");
+                    int id = scanner.nextInt();
+                    scanner.nextLine();
+
+                    if (id == -1) return;
+                    dao.delete(id);
+                }
+                case 4 -> dao.findAll();
                 case 5 -> dao.exception();
+                case 6 -> {
+                    System.out.println("Введите ID для поиска (или -1 для отмены):");
+                    int id = scanner.nextInt();
+                    scanner.nextLine();
+                    dao.findById(id);
+                }
 
                 case 0 -> System.out.println("Выход");
             }
