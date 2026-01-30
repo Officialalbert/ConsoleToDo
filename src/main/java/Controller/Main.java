@@ -4,7 +4,10 @@ import Dao.DaoClass;
 import Errors.WrongException;
 import Validation.ValidationClass;
 import Validation.ValidationResult;
+import model.DaoEntity;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class Main {
@@ -37,35 +40,41 @@ public class Main {
 
             switch (option) {
                 case 1 -> {
-                    System.out.print("Что сохранить: ");
+                    System.out.print("Введите строку для сохранения: ");
                     String value = scanner.nextLine();
                     dao.save(value);
                 }
                 case 2 -> {
                     System.out.println("Введите ID для обновления (или -1 для отмены):");
-                    int id = scanner.nextInt();
+                    long id = scanner.nextLong();
                     scanner.nextLine();
+                    System.out.println("Введите новую строку");
                     String newStr = scanner.nextLine();
-                    if (id == -1) return;
+                    if (id == -1) continue;
                     dao.update(newStr,id);
                 }
                 case 3 -> {
                     System.out.println("Введите ID для удаления (или -1 для отмены):");
-                    int id = scanner.nextInt();
+                    long id = scanner.nextLong();
                     scanner.nextLine();
 
-                    if (id == -1) return;
+                    if (id == -1) continue;
                     dao.delete(id);
                 }
-                case 4 -> dao.findAll();
-                case 5 -> dao.exception();
-                case 6 -> {
-                    System.out.println("Введите ID для поиска (или -1 для отмены):");
-                    int id = scanner.nextInt();
-                    scanner.nextLine();
-                    dao.findById(id);
+                case 4 -> {
+                    dao.findAll().forEach(System.out::println);
                 }
-
+                case 5 -> {
+                    System.out.println("Введите ID для поиска (или -1 для отмены):");
+                    long id = scanner.nextLong();
+                    scanner.nextLine();
+                    dao.findById(id)
+                            .ifPresentOrElse(
+                                    System.out::println,
+                                    () -> System.out.println("Запись не найдена")
+                            );
+                }
+                case 6 -> dao.exception();
                 case 0 -> System.out.println("Выход");
             }
 
