@@ -48,7 +48,7 @@
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
+ 
 SELECT * FROM dao_data;]]></console>
     </connection>
   </component>

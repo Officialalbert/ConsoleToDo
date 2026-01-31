@@ -2,6 +2,9 @@ package Dao;
 
 import Errors.WrongException;
 import Utils.ConfigFileUtils;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import com.zaxxer.hikari.pool.HikariPool;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import model.DaoEntity;
@@ -20,13 +23,54 @@ public class DaoClass {
     private static final Logger logger = LoggerFactory.getLogger(DaoClass.class);
     private static final int TRANSACTION_ISOLATION_LEVEL = Connection.TRANSACTION_READ_COMMITTED;
 
+    private static HikariDataSource dataSource;
     private static DaoClass INSTANCE;
+
+    static {
+        initializeDataSource();
+    }
 
     public static DaoClass getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new DaoClass();
         }
         return INSTANCE;
+    }
+
+    private static void initializeDataSource() {
+        try {
+            HikariConfig config = new HikariConfig();
+
+            // Базовые настройки подключения
+            config.setJdbcUrl(URL);
+            config.setUsername(USER);
+            config.setPassword(PASSWORD);
+
+            // Настройки пула соединений
+            config.setPoolName("HikariPool-DaoClass");
+            config.setMaximumPoolSize(10); // Максимальное количество соединений
+            config.setMinimumIdle(5); // Минимальное количество простаивающих соединений
+            config.setConnectionTimeout(30000); // 30 секунд
+            config.setIdleTimeout(600000); // 10 минут
+            config.setMaxLifetime(1800000); // 30 минут
+            config.setConnectionTestQuery("SELECT 1");
+            config.setAutoCommit(false); // Отключаем авто-коммит
+
+            dataSource = new HikariDataSource(config);
+
+            logger.info("HikariCP пул инициализирован успешно");
+
+        } catch (Exception e) {
+            logger.error("Ошибка инициализации HikariCP пула", e);
+            throw new RuntimeException("Не удалось инициализировать пул соединений", e);
+        }
+    }
+
+    public static void shutdownDataSource() {
+        if (dataSource != null && !dataSource.isClosed()) {
+            dataSource.close();
+            logger.info("HikariCP пул закрыт");
+        }
     }
 
     // В DAOClass
