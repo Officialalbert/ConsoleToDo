@@ -1,6 +1,6 @@
 package Controller;
 
-import Dao.DaoClass;
+import Dao.DaoJdbc;
 import Errors.WrongException;
 import Validation.ValidationClass;
 import Validation.ValidationResult;
@@ -12,7 +12,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws WrongException {
-        DaoClass dao = DaoClass.getInstance();
+        DaoJdbc dao = DaoJdbc.getInstance();
         Scanner scanner = new Scanner(System.in);
         int option = -1;
         ValidationClass validator = new ValidationClass();
@@ -81,5 +81,7 @@ public class Main {
         } while (option != 0);
 
         scanner.close();
+
+
     }
 }

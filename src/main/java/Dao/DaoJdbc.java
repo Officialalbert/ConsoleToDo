@@ -2,12 +2,15 @@ package Dao;
 
 import Errors.WrongException;
 import Utils.ConfigFileUtils;
+import Utils.HibernateConfiguration;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import com.zaxxer.hikari.pool.HikariPool;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import model.DaoEntity;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,24 +18,24 @@ import java.sql.*;
 import java.util.*;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class DaoClass {
+public class DaoJdbc {
 
     private static final String URL = ConfigFileUtils.getCONFIG("app.datasource.url");
     private static final String USER = ConfigFileUtils.getCONFIG("app.datasource.user");
     private static final String PASSWORD = ConfigFileUtils.getCONFIG("app.datasource.password");
-    private static final Logger logger = LoggerFactory.getLogger(DaoClass.class);
+    private static final Logger logger = LoggerFactory.getLogger(DaoJdbc.class);
     private static final int TRANSACTION_ISOLATION_LEVEL = Connection.TRANSACTION_READ_COMMITTED;
 
     private static HikariDataSource dataSource;
-    private static DaoClass INSTANCE;
+    private static DaoJdbc INSTANCE;
 
     static {
         initializeDataSource();
     }
 
-    public static DaoClass getInstance() {
+    public static synchronized DaoJdbc getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new DaoClass();
+            INSTANCE = new DaoJdbc();
         }
         return INSTANCE;
     }
@@ -75,54 +78,47 @@ public class DaoClass {
 
     // В DAOClass
     public void update(String newStr, long id) {
-        String sql = "UPDATE dao_data SET value = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
-        Connection conn = null;
-        try {
-            conn = getConnection();
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setString(1, newStr);
-                stmt.setLong(2, id);
-                int rowsAffected = stmt.executeUpdate();
-
-                if (rowsAffected > 0) {
-                    conn.commit(); // Durability - фиксируем изменения
-                    logger.info("Запись с ID {} успешно обновлена", id);
+        try (Session session = HibernateConfiguration.getSessionFactory().openSession()){
+            Transaction transaction = session.beginTransaction();
+            try {
+                DaoEntity entity = session.find(DaoEntity.class, id);
+                if (entity != null) {
+                    // Просто меняем значение в объекте
+                    entity.setValue(newStr);
+                    transaction.commit();
+                    logger.info("Id {} успешно заменен", id);
                 } else {
-                    conn.rollback(); // Atomicity - откатываем если запись не найдена
                     logger.warn("Запись с ID {} не найдена для обновления", id);
                 }
+                transaction.commit();
+            } catch (Exception e) {
+                transaction.rollback();
+                logger.error("ошибка в update dao", e);
+                throw e;
             }
-        } catch (SQLException e) {
-            logger.error("Ошибка при обновлении записи с ID: {}", id, e);
-            rollbackQuietly(conn);
-        } finally {
-            closeQuietly(conn);
         }
-
     }
 
     public void delete(long id) {
-        String sql = "DELETE FROM dao_data WHERE id = ?";
-        Connection connection = null;
-        try {
-            connection = getConnection();
-            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-                    stmt.setLong(1, id);
-                int rowsAffected = stmt.executeUpdate();
+        try (Session session = HibernateConfiguration.getSessionFactory().openSession()) {
+            Transaction tx = session.beginTransaction();
 
-                if (rowsAffected > 0) {
-                    connection.commit(); //durability
-                    logger.info("Запись с ID {} успешно удалена", id);
+            try {
+                DaoEntity entity = session.find(DaoEntity.class, id);
+
+                if (entity != null) {
+                    session.remove(entity);
+                    logger.info("Запись с ID {} удалена", id);
                 } else {
-                    connection.rollback(); // Atomicity
-                    logger.warn("Запись с ID {} не найдена для удаления", id);
+                    logger.warn("Запись с ID {} не найдена", id);
                 }
+
+                tx.commit();
+            } catch (Exception e) {
+                tx.rollback();
+                logger.error("Ошибка при удалении записи с ID {}", id, e);
+                throw e;
             }
-        } catch (SQLException e) {
-            logger.error("Ошибка при удалении записи с ID: {}", id, e);
-            rollbackQuietly(connection);
-        } finally {
-            closeQuietly(connection);
         }
     }
 
@@ -259,8 +255,7 @@ public class DaoClass {
     }
 
     private Connection getConnection() throws SQLException {
-        Connection conn = DriverManager.getConnection(URL,USER,PASSWORD);
-        conn.setAutoCommit(false);
+        Connection conn = dataSource.getConnection();
         conn.setTransactionIsolation(TRANSACTION_ISOLATION_LEVEL);
         return conn;
     }

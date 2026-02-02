@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+        <!--
+            ПОДКЛЮЧЕНИЕ К БАЗЕ ДАННЫХ
+            Вместо этих значений подставь свои из ConfigFileUtils
+        -->
+        <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/ConsoleToDo</property>
+        <property name="hibernate.connection.username">postgres</property>
+        <property name="hibernate.connection.password">123</property>
+
+        <!--
+            ДИАЛЕКТ - это "язык", на котором Hibernate общается с конкретной БД
+            Для MySQL 8+ используем MySQL8Dialect
+            Для PostgreSQL был бы PostgreSQLDialect и т.д.
+        -->
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+
+        <!--
+            ПУЛ СОЕДИНЕНИЙ - используем HikariCP (как у тебя в JDBC коде)
+            HikariCP - это самый быстрый пул соединений для Java
+        -->
+        <property name="hibernate.connection.provider_class">
+            com.zaxxer.hikari.hibernate.HikariConnectionProvider
+        </property>
+
+        <!-- Настройки HikariCP -->
+        <property name="hibernate.hikari.maximumPoolSize">10</property>
+        <property name="hibernate.hikari.minimumIdle">5</property>
+        <property name="hibernate.hikari.connectionTimeout">30000</property>
+        <property name="hibernate.hikari.idleTimeout">600000</property>
+        <property name="hibernate.hikari.maxLifetime">1800000</property>
+
+        <!--
+            УПРАВЛЕНИЕ ТРАНЗАКЦИЯМИ
+            auto_commit = false означает ручное управление (как в твоём коде)
+        -->
+        <property name="hibernate.connection.autocommit">false</property>
+
+        <!--
+            УРОВЕНЬ ИЗОЛЯЦИИ ТРАНЗАКЦИЙ
+            2 = READ_COMMITTED (как TRANSACTION_READ_COMMITTED в твоём коде)
+        -->
+        <property name="hibernate.connection.isolation">2</property>
+
+        <!--
+            ПОКАЗЫВАТЬ SQL В КОНСОЛИ
+            true - будешь видеть все SQL запросы (удобно для обучения)
+            false - для production
+        -->
+        <property name="hibernate.show_sql">true</property>
+
+        <!--
+            ФОРМАТИРОВАТЬ SQL
+            true - SQL будет красиво отформатирован в консоли
+        -->
+        <property name="hibernate.format_sql">true</property>
+
+        <!--
+            АВТОМАТИЧЕСКОЕ СОЗДАНИЕ/ОБНОВЛЕНИЕ СХЕМЫ БД
+            validate - только проверяет, что таблицы соответствуют Entity
+            update - обновляет схему при необходимости (безопасно)
+            create - создаёт заново каждый раз (удаляет данные!)
+            create-drop - создаёт при старте, удаляет при остановке
+        -->
+        <property name="hibernate.hbm2ddl.auto">validate</property>
+
+        <!--
+            КЭШИРОВАНИЕ ВТОРОГО УРОВНЯ (опционально)
+            Для начала можно отключить
+        -->
+        <property name="hibernate.cache.use_second_level_cache">false</property>
+
+        <!--
+            РЕГИСТРАЦИЯ ENTITY КЛАССОВ
+            Hibernate должен знать, какие классы являются сущностями БД
+        -->
+        <mapping class="model.DaoEntity"/>
+
+    </session-factory>
+</hibernate-configuration>
