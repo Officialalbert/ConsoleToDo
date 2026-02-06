@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="my-first-webapp" />
+        <module name="my-first-console-app" />
       </profile>
     </annotationProcessing>
   </component>
