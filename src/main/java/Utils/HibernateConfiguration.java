@@ -2,6 +2,7 @@ package Utils;
 
 import lombok.Data;
 import lombok.Getter;
+import model.DaoEntity;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -19,6 +20,8 @@ public class HibernateConfiguration {
             logger.info("Начинаем инициализацию Hibernate...");
             Configuration configuration = new Configuration();
             configuration.configure("Hibernate.cfg.xml");
+            // Явно регистрируем Entity класс
+            configuration.addAnnotatedClass(DaoEntity.class);
             ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                     .applySettings(configuration.getProperties())
                     .build();

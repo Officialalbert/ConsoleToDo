@@ -1,18 +1,15 @@
-package Controller;
+package Service;
 
-import Dao.DaoJdbc;
+import Dao.DaoHibernate;
 import Errors.WrongException;
 import Validation.ValidationClass;
 import Validation.ValidationResult;
-import model.DaoEntity;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws WrongException {
-        DaoJdbc dao = DaoJdbc.getInstance();
+        DaoHibernate dao = DaoHibernate.getInstance();
         Scanner scanner = new Scanner(System.in);
         int option = -1;
         ValidationClass validator = new ValidationClass();
@@ -62,7 +59,13 @@ public class Main {
                     dao.delete(id);
                 }
                 case 4 -> {
-                    dao.findAll().forEach(System.out::println);
+                    System.out.print("Введите номер страницы (начиная с 1): ");
+                    int page = scanner.nextInt();
+
+                    System.out.print("Введите размер страницы: ");
+                    int size = scanner.nextInt();
+
+                    dao.findAll(page - 1,size).forEach(System.out::println);
                 }
                 case 5 -> {
                     System.out.println("Введите ID для поиска (или -1 для отмены):");

@@ -9,15 +9,13 @@
             ПОДКЛЮЧЕНИЕ К БАЗЕ ДАННЫХ
             Вместо этих значений подставь свои из ConfigFileUtils
         -->
-        <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
         <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/ConsoleToDo</property>
         <property name="hibernate.connection.username">postgres</property>
         <property name="hibernate.connection.password">123</property>
 
         <!--
             ДИАЛЕКТ - это "язык", на котором Hibernate общается с конкретной БД
-            Для MySQL 8+ используем MySQL8Dialect
-            Для PostgreSQL был бы PostgreSQLDialect и т.д.
         -->
         <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
 
@@ -69,6 +67,8 @@
             create-drop - создаёт при старте, удаляет при остановке
         -->
         <property name="hibernate.hbm2ddl.auto">validate</property>
+
+        <property name="hibernate.highlight_sql">true</property>
 
         <!--
             КЭШИРОВАНИЕ ВТОРОГО УРОВНЯ (опционально)

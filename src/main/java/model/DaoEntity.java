@@ -22,5 +22,12 @@ public class DaoEntity {
     @UpdateTimestamp
     @Column(name = "updatedAt")
     private Timestamp updatedAt;
+
+    public DaoEntity() {
+    }
+
+    public DaoEntity(String value) {
+        this.value = value;
+    }
 }
 
