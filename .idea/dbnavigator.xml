@@ -11,13 +11,10 @@
   </component>
   <component name="DBNavigator.Project.DatabaseAssistantManager">
     <assistants>
-      <assistant-state connection-id="cd8f5d44-0291-4fd3-8ce9-d9869de53685" assistant-type="SELECT_AI" default-profile-name="" selected-chat-id="" availability="UNAVAILABLE" acknowledgement="NONE">
-        <tools />
-      </assistant-state>
       <assistant-state connection-id="cd8f5d44-0291-4fd3-8ce9-d9869de53685" assistant-type="PUBLIC" default-profile-name="" selected-chat-id="" availability="AVAILABLE" acknowledgement="NONE" selected="true">
         <tools />
       </assistant-state>
-      <assistant-state connection-id="5fdcb97f-33ed-4343-b23e-49ecc5a3c42d" assistant-type="SELECT_AI" default-profile-name="" selected-chat-id="" availability="UNAVAILABLE" acknowledgement="NONE">
+      <assistant-state connection-id="cd8f5d44-0291-4fd3-8ce9-d9869de53685" assistant-type="SELECT_AI" default-profile-name="" selected-chat-id="" availability="UNAVAILABLE" acknowledgement="NONE">
         <tools />
       </assistant-state>
       <assistant-state connection-id="5fdcb97f-33ed-4343-b23e-49ecc5a3c42d" assistant-type="PUBLIC" default-profile-name="" selected-chat-id="FB4FC2C1F4E84411A6A1C5263DE01105" availability="AVAILABLE" acknowledgement="ENGAGED" selected="true">
@@ -27,6 +24,9 @@
             <context provider="" profile="" model="" action="" interactive="true" />
           </chat>
         </chats>
+        <tools />
+      </assistant-state>
+      <assistant-state connection-id="5fdcb97f-33ed-4343-b23e-49ecc5a3c42d" assistant-type="SELECT_AI" default-profile-name="" selected-chat-id="" availability="UNAVAILABLE" acknowledgement="NONE">
         <tools />
       </assistant-state>
     </assistants>
