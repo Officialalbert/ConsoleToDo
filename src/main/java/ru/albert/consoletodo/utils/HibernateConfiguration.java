@@ -1,8 +1,7 @@
-package Utils;
+package ru.albert.consoletodo.utils;
 
 import lombok.Data;
-import lombok.Getter;
-import model.DaoEntity;
+import ru.albert.consoletodo.model.DaoEntity;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;

@@ -1,19 +1,27 @@
-package Service;
+package ru.albert.consoletodo;
 
-import Dao.DaoHibernate;
-import Errors.WrongException;
-import Validation.ValidationClass;
-import Validation.ValidationResult;
+import ru.albert.consoletodo.service.ToDoService;
+import ru.albert.consoletodo.validation.ValidationClass;
+import ru.albert.consoletodo.validation.ValidationResult;
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.Scanner;
 
-public class Main {
-    public static void main(String[] args) throws WrongException {
-        DaoHibernate dao = DaoHibernate.getInstance();
+@SpringBootApplication
+@RequiredArgsConstructor
+public class Main implements CommandLineRunner {
+    public static void main(String[] args) {
+        SpringApplication.run(Main.class, args);
+    }
+    private final ToDoService service;
+    private final ValidationClass validator;//Валидация!
+    @Override
+    public void run(String... args) throws Exception {
         Scanner scanner = new Scanner(System.in);
         int option = -1;
-        ValidationClass validator = new ValidationClass();
-
         do {
             System.out.println("\n=== МЕНЮ ===");
             System.out.println("1 - Сохранить");
@@ -21,7 +29,6 @@ public class Main {
             System.out.println("3 - Удалить данные");
             System.out.println("4 - Просмотр всех");
             System.out.println("5 - Поиск одного по id");
-            System.out.println("6 - для ошибки");
             System.out.println("0 - Выход");
             System.out.print("Выберите: ");
 
@@ -36,55 +43,53 @@ public class Main {
             option = Integer.parseInt(input);
 
             switch (option) {
-                case 1 -> {
+                case 1 -> { // Сохранить новую запись
                     System.out.print("Введите строку для сохранения: ");
                     String value = scanner.nextLine();
-                    dao.save(value);
+                    service.save(value);
                 }
-                case 2 -> {
+                case 2 -> { // Изменить существующую запись по ID
                     System.out.println("Введите ID для обновления (или -1 для отмены):");
                     long id = scanner.nextLong();
                     scanner.nextLine();
                     System.out.println("Введите новую строку");
                     String newStr = scanner.nextLine();
                     if (id == -1) continue;
-                    dao.update(newStr,id);
+                    service.update(newStr, id);
                 }
-                case 3 -> {
+                case 3 -> { // Удалить запись по ID
                     System.out.println("Введите ID для удаления (или -1 для отмены):");
                     long id = scanner.nextLong();
                     scanner.nextLine();
 
                     if (id == -1) continue;
-                    dao.delete(id);
+                    service.delete(id);
                 }
-                case 4 -> {
+                case 4 -> { // Просмотр всех записей с пагинацией
                     System.out.print("Введите номер страницы (начиная с 1): ");
                     int page = scanner.nextInt();
 
                     System.out.print("Введите размер страницы: ");
                     int size = scanner.nextInt();
 
-                    dao.findAll(page - 1,size).forEach(System.out::println);
+                    service.findAll(page - 1, size).forEach(System.out::println);
                 }
-                case 5 -> {
+                case 5 -> { // Поиск одной записи по ID
                     System.out.println("Введите ID для поиска (или -1 для отмены):");
                     long id = scanner.nextLong();
                     scanner.nextLine();
-                    dao.findById(id)
-                            .ifPresentOrElse(
-                                    System.out::println,
-                                    () -> System.out.println("Запись не найдена")
-                            );
+                    if (id==-1) continue;
+                    try {
+                        System.out.println(service.findById(id));
+                    } catch (Exception e) {
+                        System.out.println("Запись не найдена");
+                    }
                 }
-                case 6 -> dao.exception();
                 case 0 -> System.out.println("Выход");
             }
+        } while (option != 0) ;
 
-        } while (option != 0);
-
-        scanner.close();
-
+            scanner.close();
 
     }
 }

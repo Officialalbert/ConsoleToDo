@@ -1,8 +1,13 @@
-import model.DaoEntity;
-import org.junit.Test;
-import static org.junit.Assert.*;
+package ru.albert.consoletodo;
+
+import org.junit.jupiter.api.Test;
+import ru.albert.consoletodo.model.DaoEntity;
+
 
 import java.sql.Timestamp;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Простой тестовый класс для DaoEntity.

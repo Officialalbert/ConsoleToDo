@@ -1,8 +1,13 @@
-import Validation.ValidationClass;
-import Validation.ValidationResult;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
+package ru.albert.consoletodo;
+
+import org.aspectj.lang.annotation.Before;
+import org.junit.jupiter.api.Test;
+import ru.albert.consoletodo.validation.ValidationClass;
+import ru.albert.consoletodo.validation.ValidationResult;
+
+import static org.springframework.test.util.AssertionErrors.assertFalse;
+import static org.springframework.test.util.AssertionErrors.assertTrue;
+
 
 /**
  * Простой тестовый класс для ValidationClass.
@@ -14,7 +19,7 @@ public class ValidationClassTest {
 
     // Метод @Before выполняется перед каждым тестом
     // Это удобно для инициализации тестовых данных
-    @Before
+    @Before("")
     public void setUp() {
         validator = new ValidationClass();
     }

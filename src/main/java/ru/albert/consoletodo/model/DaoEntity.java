@@ -1,4 +1,4 @@
-package model;
+package ru.albert.consoletodo.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -30,4 +30,3 @@ public class DaoEntity {
         this.value = value;
     }
 }
-

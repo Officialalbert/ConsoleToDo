@@ -1,4 +1,4 @@
-package Validation;
+package ru.albert.consoletodo.validation;
 
 import java.util.ArrayList;
 import java.util.List;
