@@ -45,11 +45,13 @@
       <console name="Connection" type="STANDARD" schema="public" session="Main"><![CDATA[CREATE TABLE dao_data (
     id bigserial PRIMARY KEY,
     value VARCHAR(500) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
  
-SELECT * FROM dao_data;]]></console>
+SELECT * FROM dao_data;
+
+drop table dao_data;]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">

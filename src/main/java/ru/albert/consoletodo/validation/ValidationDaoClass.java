@@ -1,4 +1,4 @@
-//package Validation;
+//package ru.albert.consoletodo.validation;
 //
 //public class ValidationDaoClass implements Validaton<>{
 //    @Override

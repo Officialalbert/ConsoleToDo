@@ -1,5 +1,8 @@
-package Validation;
+package ru.albert.consoletodo.validation;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class ValidationClass implements Validaton<String> {
 
     @Override
@@ -20,8 +23,8 @@ public class ValidationClass implements Validaton<String> {
         int option = Integer.parseInt(input);
 
         // Проверка диапазона
-        if (option < 0 || option > 6) {
-            result.addError("Введите число от 0 до 6");
+        if (option < 0 || option > 5) {
+            result.addError("Введите число от 0 до 5");
         }
 
         return result;

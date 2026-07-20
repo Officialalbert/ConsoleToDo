@@ -1,4 +1,4 @@
-package Utils;
+package ru.albert.consoletodo.utils;
 
 import lombok.experimental.UtilityClass;
 
@@ -34,4 +34,3 @@ public class ConfigFileUtils {
         }
     }
 }
-
