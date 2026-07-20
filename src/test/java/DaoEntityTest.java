@@ -33,10 +33,8 @@ public class DaoEntityTest {
         DaoEntity entity = new DaoEntity();
         entity.setValue("Simple task");
 
-        // Вызываем toString() - просто проверяем, что метод не вызывает ошибку
         String result = entity.toString();
 
-        // Проверяем, что строка содержит наше значение
         assertTrue(result.contains("Simple task"));
     }
 
